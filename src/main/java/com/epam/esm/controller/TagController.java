@@ -19,8 +19,8 @@ public class TagController {
         return tagService.findTagById(id);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Tag createTag(Tag tag){
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Tag createTag(@RequestBody Tag tag){
         return tagService.createTag(tag);
     }
 }
