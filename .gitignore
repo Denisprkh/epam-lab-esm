@@ -4,7 +4,6 @@ out
 bin
 tmp
 target
-*.jar
 *.war
 *.log
 Main.java

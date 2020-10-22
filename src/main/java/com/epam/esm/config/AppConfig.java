@@ -23,7 +23,6 @@ public class AppConfig implements WebMvcConfigurer {
     private static final String USER = "user";
     private static final String PASSWORD = "password";
 
-    @Autowired
     public AppConfig(Environment environment) {
         this.environment = environment;
     }
