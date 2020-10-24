@@ -5,8 +5,11 @@ plugins {
 
 group 'org.example'
 version '1.0-SNAPSHOT'
-def springVersion = "5.2.9.RELEASE";
-def jacksonVersion = "2.11.3"
+
+ext{
+    springSupportVersion = "5.2.9.RELEASE"
+    jacksonSupportVersion = "2.11.3"
+}
 
 repositories {
     mavenCentral()
@@ -14,14 +17,21 @@ repositories {
 
 dependencies {
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile "org.springframework:spring-core:" + springVersion
-    compile "org.springframework:spring-context:" + springVersion
-    compile "org.springframework:spring-web:" + springVersion
-    compile "org.springframework:spring-webmvc:" + springVersion
-    compile "org.springframework:spring-jdbc:" + springVersion
-    compile "mysql:mysql-connector-java:8.0.22"
-    compile "javax.servlet:javax.servlet-api:4.0.1"
-    compile "com.fasterxml.jackson.core:jackson-databind:" + jacksonVersion
+    implementation "org.springframework:spring-core:$springSupportVersion"
+    implementation "org.springframework:spring-context:$springSupportVersion"
+    implementation "org.springframework:spring-web:$springSupportVersion"
+    implementation "org.springframework:spring-webmvc:$springSupportVersion"
+    implementation "org.springframework:spring-jdbc:$springSupportVersion"
+    implementation "mysql:mysql-connector-java:8.0.22"
+    implementation "javax.servlet:javax.servlet-api:4.0.1"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonSupportVersion"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonSupportVersion"
+    implementation "org.mockito:mockito-all:1.10.19"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
 
+}
+
+test {
+    useJUnitPlatform()
 }

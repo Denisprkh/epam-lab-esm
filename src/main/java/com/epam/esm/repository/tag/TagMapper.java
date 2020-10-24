@@ -1,8 +1,6 @@
 package com.epam.esm.repository.tag;
 
-import com.epam.esm.builder.TagBuilder;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.SqlColumnName;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -12,9 +10,9 @@ public class TagMapper implements RowMapper<Tag> {
 
     @Override
     public Tag mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new TagBuilder()
-                .buildWithId(rs.getInt(SqlColumnName.TAG_ID_COLUMN_NAME))
-                .buildWithName(rs.getString(SqlColumnName.TAG_NAME_COLUMN_NAME))
-                .buildTag();
+        Tag tag = new Tag();
+        tag.setId(rs.getInt(TagSqlColumnName.TAG_ID_COLUMN_NAME));
+        tag.setName(rs.getString(TagSqlColumnName.TAG_NAME_COLUMN_NAME));
+        return tag;
     }
 }

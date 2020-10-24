@@ -8,4 +8,6 @@ public interface TagService {
 
     Tag findTagById(Integer id);
 
+    void deleteTag(Tag tag);
+
 }

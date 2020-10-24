@@ -1,19 +1,17 @@
 package com.epam.esm.entity;
 
-import com.epam.esm.builder.TagBuilder;
 
-import java.io.Serializable;
-
-public class Tag implements Serializable {
+public class Tag {
 
     private int id;
     private String name;
 
-    public Tag(){}
+    public Tag() {
+    }
 
-    public Tag(TagBuilder tagBuilder){
-        this.id = tagBuilder.getId();
-        this.name = tagBuilder.getName();
+    public Tag(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public int getId() {
