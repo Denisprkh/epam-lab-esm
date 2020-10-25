@@ -47,7 +47,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public boolean delete(Tag tag) {
-        return jdbcTemplate.update(TagSqlQuery.DELETE_TAG_BY_ID, tag.getId()) == SUCCESSFULLY_UPDATED_ROW ;
+        return jdbcTemplate.update(TagSqlQuery.DELETE_TAG_BY_ID, tag.getId()) == SUCCESSFULLY_UPDATED_ROW;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public List<Tag> findAll() {
-        return jdbcTemplate.query(TagSqlQuery.FIND_ALL_TAGS,new TagMapper());
+        return jdbcTemplate.query(TagSqlQuery.FIND_ALL_TAGS, new TagMapper());
     }
 
 }
