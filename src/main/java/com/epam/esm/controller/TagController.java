@@ -2,8 +2,9 @@ package com.epam.esm.controller;
 
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.TagService;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/tags")
@@ -14,18 +15,23 @@ public class TagController {
         this.tagService = tagService;
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")
     public Tag findTagById(@PathVariable int id) {
         return tagService.findTagById(id);
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public Tag createTag(@RequestBody Tag tag) {
         return tagService.createTag(tag);
     }
 
-    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping
     public void deleteTag(@RequestBody Tag tag) {
         tagService.deleteTag(tag);
+    }
+
+    @GetMapping
+    public List<Tag> findAllTags() {
+        return tagService.findAllTags();
     }
 }

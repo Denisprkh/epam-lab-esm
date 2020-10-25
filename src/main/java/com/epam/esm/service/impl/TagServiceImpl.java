@@ -5,6 +5,8 @@ import com.epam.esm.repository.tag.TagRepository;
 import com.epam.esm.service.TagService;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class TagServiceImpl implements TagService {
 
@@ -25,7 +27,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void deleteTag(Tag tag) {
-        tagRepository.delete(tag);
+    public boolean deleteTag(Tag tag) {
+        return tagRepository.delete(tag);
+    }
+
+    @Override
+    public List<Tag> findAllTags() {
+        return tagRepository.findAll();
     }
 }

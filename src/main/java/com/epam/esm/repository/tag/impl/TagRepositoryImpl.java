@@ -1,9 +1,9 @@
 package com.epam.esm.repository.tag.impl;
 
 import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.tag.TagSqlQuery;
 import com.epam.esm.repository.tag.TagMapper;
 import com.epam.esm.repository.tag.TagRepository;
+import com.epam.esm.repository.tag.TagSqlQuery;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -20,6 +20,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
+    private static final int SUCCESSFULLY_UPDATED_ROW = 1;
 
     public TagRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -45,8 +46,8 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public void delete(Tag tag) {
-        jdbcTemplate.update(TagSqlQuery.DELETE_TAG_BY_ID, tag.getId());
+    public boolean delete(Tag tag) {
+        return jdbcTemplate.update(TagSqlQuery.DELETE_TAG_BY_ID, tag.getId()) == SUCCESSFULLY_UPDATED_ROW ;
     }
 
     @Override
@@ -56,6 +57,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public List<Tag> findAll() {
-        return null;
+        return jdbcTemplate.query(TagSqlQuery.FIND_ALL_TAGS,new TagMapper());
     }
+
 }

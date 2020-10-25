@@ -8,7 +8,7 @@ public interface Repository<T, K> {
 
     T findById(K id);
 
-    void delete(T t);
+    boolean delete(T t);
 
     void update(T t);
 

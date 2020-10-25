@@ -21,13 +21,13 @@ public class AppConfig implements WebMvcConfigurer {
 
     private final Environment environment;
 
-    @Value("url")
+    @Value("${url}")
     private String url;
 
-    @Value("user")
+    @Value("${user}")
     private String user;
 
-    @Value("password")
+    @Value("${password}")
     private String password;
 
     public AppConfig(Environment environment) {
@@ -38,9 +38,9 @@ public class AppConfig implements WebMvcConfigurer {
     public DataSource dataSource() {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
         dataSource.setDriverClass(com.mysql.cj.jdbc.Driver.class);
-        dataSource.setUrl(environment.getProperty(url));
-        dataSource.setUsername(environment.getProperty(user));
-        dataSource.setPassword(environment.getProperty(password));
+        dataSource.setUrl(url);
+        dataSource.setUsername(user);
+        dataSource.setPassword(password);
         return dataSource;
     }
 
