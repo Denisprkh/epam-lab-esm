@@ -16,7 +16,7 @@ public class TagController {
     }
 
     @GetMapping(value = "/{id}")
-    public Tag findTagById(@PathVariable int id) {
+    public Tag findTagById(@PathVariable Integer id) {
         return tagService.findTagById(id);
     }
 
@@ -25,9 +25,9 @@ public class TagController {
         return tagService.createTag(tag);
     }
 
-    @DeleteMapping
-    public void deleteTag(@RequestBody Tag tag) {
-        tagService.deleteTag(tag);
+    @DeleteMapping(value = "/{id}")
+    public void deleteTag(@PathVariable Integer id) {
+        tagService.deleteTag(id);
     }
 
     @GetMapping

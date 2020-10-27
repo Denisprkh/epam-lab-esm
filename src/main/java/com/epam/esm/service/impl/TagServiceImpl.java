@@ -1,7 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.tag.TagRepository;
+import com.epam.esm.dao.tag.TagDao;
 import com.epam.esm.service.TagService;
 import org.springframework.stereotype.Component;
 
@@ -10,29 +10,49 @@ import java.util.List;
 @Component
 public class TagServiceImpl implements TagService {
 
-    private final TagRepository tagRepository;
+    private final TagDao tagDao;
 
-    public TagServiceImpl(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
+    public TagServiceImpl(TagDao tagDao) {
+        this.tagDao = tagDao;
     }
 
     @Override
     public Tag createTag(Tag tag) {
-        return tagRepository.create(tag);
+        return tagDao.create(tag);
     }
 
     @Override
     public Tag findTagById(Integer id) {
-        return tagRepository.findById(id);
+        return tagDao.findById(id);
     }
 
     @Override
-    public boolean deleteTag(Tag tag) {
-        return tagRepository.delete(tag);
+    public boolean deleteTag(Integer id) {
+        return tagDao.delete(id);
     }
 
     @Override
     public List<Tag> findAllTags() {
-        return tagRepository.findAll();
+        return tagDao.findAll();
+    }
+
+    @Override
+    public boolean isTagExists(String tagName) {
+        return tagDao.isTagExists(tagName);
+    }
+
+    @Override
+    public List<Tag> createAllTags(List<Tag> tags) {
+        return tagDao.createAll(tags);
+    }
+
+    @Override
+    public Tag findTagByName(String tagName) {
+        return tagDao.findTagByName(tagName);
+    }
+
+    @Override
+    public List<Tag> findGiftCertificatesTags(Integer giftCertificatesId) {
+        return tagDao.findAllGiftCertificatesTagsById(giftCertificatesId);
     }
 }

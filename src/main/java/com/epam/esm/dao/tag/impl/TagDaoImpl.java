@@ -1,9 +1,9 @@
-package com.epam.esm.repository.tag.impl;
+package com.epam.esm.dao.tag.impl;
 
 import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.tag.TagMapper;
-import com.epam.esm.repository.tag.TagRepository;
-import com.epam.esm.repository.tag.TagSqlQuery;
+import com.epam.esm.dao.tag.TagMapper;
+import com.epam.esm.dao.tag.TagDao;
+import com.epam.esm.dao.tag.TagSqlQuery;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -14,15 +14,16 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
-public class TagRepositoryImpl implements TagRepository {
+public class TagDaoImpl implements TagDao {
 
     private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
     private static final int SUCCESSFULLY_UPDATED_ROW = 1;
 
-    public TagRepositoryImpl(DataSource dataSource) {
+    public TagDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(this.dataSource);
     }
@@ -46,18 +47,38 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public boolean delete(Tag tag) {
-        return jdbcTemplate.update(TagSqlQuery.DELETE_TAG_BY_ID, tag.getId()) == SUCCESSFULLY_UPDATED_ROW;
+    public boolean delete(Integer id) {
+        return jdbcTemplate.update(TagSqlQuery.DELETE_TAG_BY_ID, id) == SUCCESSFULLY_UPDATED_ROW;
     }
 
     @Override
-    public void update(Tag tag) {
+    public Tag update(Tag tag) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Tag> findAll() {
         return jdbcTemplate.query(TagSqlQuery.FIND_ALL_TAGS, new TagMapper());
+    }
+
+    @Override
+    public List<Tag> createAll(List<Tag> tags) {
+        return tags.stream().map(this::create).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isTagExists(String tagName) {
+        return jdbcTemplate.queryForObject(TagSqlQuery.IS_TAG_NAME_EXISTS, new String[]{tagName}, Boolean.class);
+    }
+
+    @Override
+    public Tag findTagByName(String tagName) {
+        return jdbcTemplate.queryForObject(TagSqlQuery.FIND_TAG_BY_NAME, new TagMapper(), tagName);
+    }
+
+    @Override
+    public List<Tag> findAllGiftCertificatesTagsById(Integer giftCertificateId) {
+        return jdbcTemplate.query(TagSqlQuery.FIND_TAGS_BY_GIFT_CERTIFICATES_ID, new TagMapper(), giftCertificateId);
     }
 
 }

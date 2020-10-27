@@ -1,4 +1,4 @@
-package com.epam.esm.repository.tag;
+package com.epam.esm.dao.tag;
 
 public final class TagSqlColumnName {
 

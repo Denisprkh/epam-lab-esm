@@ -10,8 +10,16 @@ public interface TagService {
 
     Tag findTagById(Integer id);
 
-    boolean deleteTag(Tag tag);
+    boolean deleteTag(Integer id);
 
     List<Tag> findAllTags();
+
+    boolean isTagExists(String tagName);
+
+    List<Tag> createAllTags(List<Tag> tags);
+
+    Tag findTagByName(String tagName);
+
+    List<Tag> findGiftCertificatesTags(Integer giftCertificatesId);
 
 }
