@@ -1,11 +1,17 @@
 package com.epam.esm.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -17,12 +23,12 @@ import javax.sql.DataSource;
 
 @Configuration
 @ComponentScan("com.epam.esm")
+@EnableTransactionManagement
 @PropertySource("classpath:database.properties")
 @EnableWebMvc
-@EnableTransactionManagement
 public class AppConfig implements WebMvcConfigurer {
 
-    private final Environment environment;
+    private static final Logger LOG = LogManager.getLogger();
 
     @Value("${url}")
     private String url;
@@ -32,10 +38,6 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Value("${password}")
     private String password;
-
-    public AppConfig(Environment environment) {
-        this.environment = environment;
-    }
 
     @Bean
     public DataSource dataSource() {
@@ -52,4 +54,28 @@ public class AppConfig implements WebMvcConfigurer {
         return new DataSourceTransactionManager(dataSource());
     }
 
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setFieldMatchingEnabled(true)
+                .setSkipNullEnabled(true)
+                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
+        return modelMapper;
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource source = new ResourceBundleMessageSource();
+        source.setBasename("exception-info.locale");
+        source.setUseCodeAsDefaultMessage(true);
+        source.setDefaultEncoding("UTF-8");
+        return source;
+    }
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 }

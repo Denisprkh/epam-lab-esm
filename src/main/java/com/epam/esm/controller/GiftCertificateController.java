@@ -1,10 +1,12 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.service.GiftCertificateService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/giftCertificates")
@@ -17,27 +19,34 @@ public class GiftCertificateController {
     }
 
     @PostMapping
-    public GiftCertificate createGiftCertificate(@RequestBody GiftCertificate giftCertificate) {
-        return giftCertificateService.addGiftCertificateAndItsTags(giftCertificate);
+    public GiftCertificateDto createGiftCertificate(@RequestBody GiftCertificateDto giftCertificateDto) {
+        return giftCertificateService.addGiftCertificate(giftCertificateDto);
     }
 
     @GetMapping(value = "/{id}")
-    public GiftCertificate findGiftCertificateById(@PathVariable Integer id) {
+    public GiftCertificateDto findGiftCertificateById(@PathVariable Integer id) {
         return giftCertificateService.findGiftCertificateById(id);
     }
 
     @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public void deleteGiftCertificate(@PathVariable Integer id) {
         giftCertificateService.deleteGiftCertificate(id);
     }
 
     @PutMapping
-    public GiftCertificate updateGiftCertificate(@RequestBody GiftCertificate giftCertificate) {
-        return giftCertificateService.updateGiftCertificate(giftCertificate);
+    public GiftCertificateDto updateGiftCertificate(@RequestBody GiftCertificateDto giftCertificateDto) {
+        return giftCertificateService.updateGiftCertificate(giftCertificateDto);
+    }
+
+    @GetMapping(value = "/all")
+    public List<GiftCertificateDto> findAllGiftCertificates() {
+        return giftCertificateService.findAllGiftCertificates();
     }
 
     @GetMapping
-    public List<GiftCertificate> findAllGiftCertificates() {
-        return giftCertificateService.findAllGiftCertificates();
+    public List<GiftCertificateDto> findGiftCertificatesByParams(@RequestParam Map<String, String> params) {
+        return giftCertificateService.findGiftCertificates(params);
     }
+
 }

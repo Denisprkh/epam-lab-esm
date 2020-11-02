@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,12 +23,14 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
+    private final GiftCertificateMapper giftCertificateMapper;
     private static final int SUCCESSFULLY_UPDATED_ROW = 1;
     private static final Logger LOG = LogManager.getLogger();
 
-    public GiftCertificateDaoImpl(DataSource dataSource) {
+    public GiftCertificateDaoImpl(DataSource dataSource, GiftCertificateMapper giftCertificateMapper) {
         this.dataSource = dataSource;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.jdbcTemplate = new JdbcTemplate(this.dataSource);
+        this.giftCertificateMapper = giftCertificateMapper;
     }
 
     @Override
@@ -40,8 +41,8 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
                     Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, giftCertificate.getName());
             statement.setBigDecimal(2, giftCertificate.getPrice());
-            statement.setTimestamp(3, Timestamp.valueOf(giftCertificate.getCreateDate()));
-            statement.setTimestamp(4, Timestamp.valueOf(giftCertificate.getLastUpdateDate()));
+            statement.setTimestamp(3, giftCertificate.getCreateDate());
+            statement.setTimestamp(4, giftCertificate.getLastUpdateDate());
             statement.setInt(5, giftCertificate.getDurationInDays());
             statement.setString(6, giftCertificate.getDescription());
             return statement;
@@ -53,12 +54,17 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     @Override
     public GiftCertificate findById(Integer id) {
         return jdbcTemplate.queryForObject(GiftCertificateSqlQuery.FIND_GIFT_CERTIFICATE_BY_ID,
-                new GiftCertificateMapper(), id);
+                giftCertificateMapper, id);
     }
 
     @Override
     public boolean delete(Integer id) {
-        return jdbcTemplate.update(GiftCertificateSqlQuery.DELETE_GIFT_CERTIFICATE_BY_ID, id) ==
+        return jdbcTemplate.update(GiftCertificateSqlQuery.DELETE_GIFT_CERTIFICATE_BY_ID, id) == SUCCESSFULLY_UPDATED_ROW;
+    }
+
+    @Override
+    public boolean deleteGiftCertificatesTags(Integer giftCertificateId) {
+        return jdbcTemplate.update(GiftCertificateSqlQuery.DELETE_GIFT_CERTIFICATES_TAGS, giftCertificateId) ==
                 SUCCESSFULLY_UPDATED_ROW;
     }
 
@@ -68,7 +74,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
                     PreparedStatement statement = connection.prepareStatement(GiftCertificateSqlQuery.UPDATE_TAG_BY_ID);
                     statement.setString(1, giftCertificate.getName());
                     statement.setBigDecimal(2, giftCertificate.getPrice());
-                    statement.setTimestamp(3, Timestamp.valueOf(giftCertificate.getLastUpdateDate()));
+                    statement.setTimestamp(3, giftCertificate.getLastUpdateDate());
                     statement.setInt(4, giftCertificate.getDurationInDays());
                     statement.setString(5, giftCertificate.getDescription());
                     statement.setInt(6, giftCertificate.getId());
@@ -80,7 +86,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public List<GiftCertificate> findAll() {
-        return jdbcTemplate.query(GiftCertificateSqlQuery.FIND_ALL_GIFT_CERTIFICATES, new GiftCertificateMapper());
+        return jdbcTemplate.query(GiftCertificateSqlQuery.FIND_ALL_GIFT_CERTIFICATES, giftCertificateMapper);
     }
 
     @Override
@@ -93,4 +99,8 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
         }));
     }
 
+    @Override
+    public List<GiftCertificate> findGiftCertificatesByParameters(String condition) {
+        return jdbcTemplate.query(GiftCertificateSqlQuery.SELECT_ALL_FIELDS + condition, giftCertificateMapper);
+    }
 }

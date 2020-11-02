@@ -4,13 +4,12 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.dao.CommonDao;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TagDao extends CommonDao<Tag, Integer> {
-    List<Tag> createAll(List<Tag> tags);
 
-    boolean isTagExists(String tagName);
-
-    Tag findTagByName(String tagName);
+    Optional<Tag> findTagByName(String tagName);
 
     List<Tag> findAllGiftCertificatesTagsById(Integer giftCertificateId);
+
 }

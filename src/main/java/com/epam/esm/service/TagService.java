@@ -3,6 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.entity.Tag;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TagService {
 
@@ -14,11 +15,7 @@ public interface TagService {
 
     List<Tag> findAllTags();
 
-    boolean isTagExists(String tagName);
-
-    List<Tag> createAllTags(List<Tag> tags);
-
-    Tag findTagByName(String tagName);
+    Optional<Tag> findTagByName(String tagName);
 
     List<Tag> findGiftCertificatesTags(Integer giftCertificatesId);
 

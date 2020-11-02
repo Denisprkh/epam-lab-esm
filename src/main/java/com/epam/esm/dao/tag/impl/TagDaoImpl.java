@@ -14,18 +14,20 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Component
 public class TagDaoImpl implements TagDao {
 
     private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
+    private final TagMapper tagMapper;
     private static final int SUCCESSFULLY_UPDATED_ROW = 1;
 
-    public TagDaoImpl(DataSource dataSource) {
+    public TagDaoImpl(DataSource dataSource, TagMapper tagMapper) {
         this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(this.dataSource);
+        this.tagMapper = tagMapper;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag findById(Integer id) {
-        return jdbcTemplate.queryForObject(TagSqlQuery.FIND_TAG_BY_ID, new TagMapper(), id);
+        return jdbcTemplate.queryForObject(TagSqlQuery.FIND_TAG_BY_ID, tagMapper, id);
     }
 
     @Override
@@ -58,27 +60,17 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> findAll() {
-        return jdbcTemplate.query(TagSqlQuery.FIND_ALL_TAGS, new TagMapper());
+        return jdbcTemplate.query(TagSqlQuery.FIND_ALL_TAGS, tagMapper);
     }
 
     @Override
-    public List<Tag> createAll(List<Tag> tags) {
-        return tags.stream().map(this::create).collect(Collectors.toList());
-    }
-
-    @Override
-    public boolean isTagExists(String tagName) {
-        return jdbcTemplate.queryForObject(TagSqlQuery.IS_TAG_NAME_EXISTS, new String[]{tagName}, Boolean.class);
-    }
-
-    @Override
-    public Tag findTagByName(String tagName) {
-        return jdbcTemplate.queryForObject(TagSqlQuery.FIND_TAG_BY_NAME, new TagMapper(), tagName);
+    public Optional<Tag> findTagByName(String tagName) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(TagSqlQuery.FIND_TAG_BY_NAME, tagMapper, tagName));
     }
 
     @Override
     public List<Tag> findAllGiftCertificatesTagsById(Integer giftCertificateId) {
-        return jdbcTemplate.query(TagSqlQuery.FIND_TAGS_BY_GIFT_CERTIFICATES_ID, new TagMapper(), giftCertificateId);
+        return jdbcTemplate.query(TagSqlQuery.FIND_TAGS_BY_GIFT_CERTIFICATES_ID, tagMapper, giftCertificateId);
     }
 
 }

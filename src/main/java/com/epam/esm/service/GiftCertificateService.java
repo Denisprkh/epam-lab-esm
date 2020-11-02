@@ -1,18 +1,22 @@
 package com.epam.esm.service;
 
-import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.dto.GiftCertificateDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface GiftCertificateService {
 
-    GiftCertificate addGiftCertificateAndItsTags(GiftCertificate giftCertificate);
+    GiftCertificateDto addGiftCertificate(GiftCertificateDto giftCertificateDto);
 
-    GiftCertificate findGiftCertificateById(Integer id);
+    GiftCertificateDto findGiftCertificateById(Integer id);
 
-    void deleteGiftCertificate(Integer id);
+    boolean deleteGiftCertificate(Integer id);
 
-    GiftCertificate updateGiftCertificate(GiftCertificate giftCertificate);
+    GiftCertificateDto updateGiftCertificate(GiftCertificateDto giftCertificateDto);
 
-    List<GiftCertificate> findAllGiftCertificates();
+    List<GiftCertificateDto> findAllGiftCertificates();
+
+    List<GiftCertificateDto> findGiftCertificates(Map<String, String> params);
+
 }

@@ -6,6 +6,7 @@ import com.epam.esm.service.TagService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class TagServiceImpl implements TagService {
@@ -37,17 +38,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public boolean isTagExists(String tagName) {
-        return tagDao.isTagExists(tagName);
-    }
-
-    @Override
-    public List<Tag> createAllTags(List<Tag> tags) {
-        return tagDao.createAll(tags);
-    }
-
-    @Override
-    public Tag findTagByName(String tagName) {
+    public Optional<Tag> findTagByName(String tagName) {
         return tagDao.findTagByName(tagName);
     }
 
@@ -55,4 +46,5 @@ public class TagServiceImpl implements TagService {
     public List<Tag> findGiftCertificatesTags(Integer giftCertificatesId) {
         return tagDao.findAllGiftCertificatesTagsById(giftCertificatesId);
     }
+
 }

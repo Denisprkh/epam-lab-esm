@@ -14,6 +14,11 @@ public final class GiftCertificateSqlQuery {
             "duration = ?, description = ? WHERE gift_certificate_id = ?";
     public static final String ADD_GIFT_CERTIFICATES_TAG = "INSERT INTO gift_certificates_tag (tag_id, " +
             "gift_certificate_id) VALUES (?,?)";
+    public static final String DELETE_GIFT_CERTIFICATES_TAGS = "DELETE FROM gift_certificates_tag WHERE " +
+            "gift_certificate_id = ?";
+    public static final String SELECT_ALL_FIELDS = "SELECT gift_certificate.gift_certificate_id,gift_certificate.name," +
+            "gift_certificate.price,gift_certificate.create_date,gift_certificate.last_update_date," +
+            "gift_certificate.duration,gift_certificate.description FROM gift_certificate";
 
     private GiftCertificateSqlQuery() {
     }

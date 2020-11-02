@@ -7,5 +7,10 @@ import com.epam.esm.entity.Tag;
 import java.util.List;
 
 public interface GiftCertificateDao extends CommonDao<GiftCertificate, Integer> {
+
     void addGiftCertificatesTags(List<Tag> giftCertificatesTags, GiftCertificate giftCertificate);
+
+    boolean deleteGiftCertificatesTags(Integer giftCertificatesId);
+
+    List<GiftCertificate> findGiftCertificatesByParameters(String condition);
 }
