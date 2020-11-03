@@ -1,0 +1,19 @@
+package com.epam.esm.dao.giftcertificate;
+
+import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.dao.CommonDao;
+import com.epam.esm.entity.Tag;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface GiftCertificateDao extends CommonDao<GiftCertificate, Integer> {
+
+    void addGiftCertificatesTags(List<Tag> giftCertificatesTags, GiftCertificate giftCertificate);
+
+    boolean deleteGiftCertificatesTags(Integer giftCertificatesId);
+
+    List<GiftCertificate> findGiftCertificatesByParameters(String condition);
+
+    Optional<GiftCertificate> findByName(String name);
+}

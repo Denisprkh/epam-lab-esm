@@ -4,6 +4,7 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.service.TagService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,18 +17,18 @@ public class TagController {
     }
 
     @GetMapping(value = "/{id}")
-    public Tag findTagById(@PathVariable int id) {
+    public Tag findTagById(@PathVariable Integer id) {
         return tagService.findTagById(id);
     }
 
     @PostMapping
-    public Tag createTag(@RequestBody Tag tag) {
+    public Tag createTag(@Valid @RequestBody Tag tag) {
         return tagService.createTag(tag);
     }
 
-    @DeleteMapping
-    public void deleteTag(@RequestBody Tag tag) {
-        tagService.deleteTag(tag);
+    @DeleteMapping(value = "/{id}")
+    public void deleteTag(@PathVariable Integer id) {
+        tagService.deleteTag(id);
     }
 
     @GetMapping

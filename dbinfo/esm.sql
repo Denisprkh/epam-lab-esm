@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `esm`.`tag` (
 CREATE TABLE IF NOT EXISTS `esm`.`gift_certificate` (
   `gift_certificate_id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
-  `price` DECIMAL NOT NULL,
+  `price` DECIMAL(5,2) NOT NULL,
   `create_date` TIMESTAMP NOT NULL,
   `last_update_date` TIMESTAMP NOT NULL,
   `duration` INT NOT NULL,

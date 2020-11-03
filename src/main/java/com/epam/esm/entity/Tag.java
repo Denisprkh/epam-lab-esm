@@ -1,9 +1,16 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.util.ResourceBundleErrorMessage;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class Tag {
 
     private int id;
+
+    @NotNull(message = ResourceBundleErrorMessage.TAG_NAME_IS_REQUIRED_ERROR_MESSAGE)
+    @Size(min = 2, max = 30, message = ResourceBundleErrorMessage.TAG_NAME_FORMAT_ERROR_MESSAGE)
     private String name;
 
     public Tag() {
@@ -11,6 +18,10 @@ public class Tag {
 
     public Tag(int id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public Tag(String name) {
         this.name = name;
     }
 
@@ -56,5 +67,6 @@ public class Tag {
         sb.append('}');
         return sb.toString();
     }
+
 }
 
