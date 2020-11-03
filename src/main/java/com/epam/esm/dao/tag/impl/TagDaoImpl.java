@@ -6,6 +6,8 @@ import com.epam.esm.dao.tag.TagDao;
 import com.epam.esm.dao.tag.TagSqlQuery;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.util.ResourceBundleErrorMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,6 +28,7 @@ public class TagDaoImpl implements TagDao {
     private final JdbcTemplate jdbcTemplate;
     private final TagMapper tagMapper;
     private static final int SUCCESSFULLY_UPDATED_ROW = 1;
+    private static final Logger LOG = LogManager.getLogger();
 
     public TagDaoImpl(DataSource dataSource, TagMapper tagMapper) {
         this.dataSource = dataSource;
@@ -90,6 +93,11 @@ public class TagDaoImpl implements TagDao {
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(ResourceBundleErrorMessage.RESOURCE_NOT_FOUND);
         }
+    }
+
+    @Override
+    public boolean deleteGiftCertificateTag(Integer tagId) {
+        return jdbcTemplate.update(TagSqlQuery.DELETE_GIFT_CERTIFICATES_TAG,tagId) == SUCCESSFULLY_UPDATED_ROW;
     }
 
 }

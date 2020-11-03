@@ -12,4 +12,5 @@ public interface TagDao extends CommonDao<Tag, Integer> {
 
     List<Tag> findAllGiftCertificatesTagsById(Integer giftCertificateId);
 
+    boolean deleteGiftCertificateTag(Integer tagId);
 }

@@ -11,6 +11,7 @@ public final class TagSqlQuery {
             "gift_certificates_tag ON tag.tag_id = gift_certificates_tag.tag_id JOIN gift_certificate ON " +
             "gift_certificates_tag.gift_certificate_id = gift_certificate.gift_certificate_id WHERE " +
             "gift_certificate.gift_certificate_id = ?";
+    public static final String DELETE_GIFT_CERTIFICATES_TAG = "DELETE FROM gift_certificates_tag WHERE tag_id = ?";
 
     private TagSqlQuery() {
     }

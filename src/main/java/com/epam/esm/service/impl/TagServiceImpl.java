@@ -6,6 +6,7 @@ import com.epam.esm.exception.ResourceAlreadyExistsException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.util.ResourceBundleErrorMessage;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +36,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional
     public boolean deleteTag(Integer id) {
-        return tagDao.delete(id);
+        boolean isDeletedFromTag = tagDao.deleteGiftCertificateTag(id);
+        boolean isDeleted = tagDao.delete(id);
+        return isDeleted && isDeletedFromTag;
     }
 
     @Override

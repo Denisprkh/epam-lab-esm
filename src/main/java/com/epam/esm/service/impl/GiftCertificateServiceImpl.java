@@ -64,10 +64,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public boolean deleteGiftCertificate(Integer id) {
-        if (giftCertificateDao.deleteGiftCertificatesTags(id)) {
-            return giftCertificateDao.delete(id);
-        }
-        return false;
+        boolean giftCertificatesTagsAreDeleted = giftCertificateDao.deleteGiftCertificatesTags(id);
+        boolean giftCertificateIsDeleted = giftCertificateDao.delete(id);
+        return giftCertificatesTagsAreDeleted && giftCertificateIsDeleted;
     }
 
     @Override
