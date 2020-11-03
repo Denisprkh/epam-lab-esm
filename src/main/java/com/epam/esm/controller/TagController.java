@@ -4,6 +4,7 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.service.TagService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class TagController {
     }
 
     @PostMapping
-    public Tag createTag(@RequestBody Tag tag) {
+    public Tag createTag(@Valid @RequestBody Tag tag) {
         return tagService.createTag(tag);
     }
 

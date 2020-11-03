@@ -1,9 +1,5 @@
 package com.epam.esm.config;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -27,8 +23,6 @@ import javax.sql.DataSource;
 @PropertySource("classpath:database.properties")
 @EnableWebMvc
 public class AppConfig implements WebMvcConfigurer {
-
-    private static final Logger LOG = LogManager.getLogger();
 
     @Value("${url}")
     private String url;
@@ -55,17 +49,6 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.STRICT)
-                .setFieldMatchingEnabled(true)
-                .setSkipNullEnabled(true)
-                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
-        return modelMapper;
-    }
-
-    @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
         source.setBasename("exception-info.locale");
@@ -78,4 +61,5 @@ public class AppConfig implements WebMvcConfigurer {
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
+
 }

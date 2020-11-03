@@ -5,6 +5,7 @@ import com.epam.esm.dao.CommonDao;
 import com.epam.esm.entity.Tag;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GiftCertificateDao extends CommonDao<GiftCertificate, Integer> {
 
@@ -13,4 +14,6 @@ public interface GiftCertificateDao extends CommonDao<GiftCertificate, Integer> 
     boolean deleteGiftCertificatesTags(Integer giftCertificatesId);
 
     List<GiftCertificate> findGiftCertificatesByParameters(String condition);
+
+    Optional<GiftCertificate> findByName(String name);
 }

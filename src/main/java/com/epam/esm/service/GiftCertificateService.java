@@ -13,9 +13,7 @@ public interface GiftCertificateService {
 
     boolean deleteGiftCertificate(Integer id);
 
-    GiftCertificateDto updateGiftCertificate(GiftCertificateDto giftCertificateDto);
-
-    List<GiftCertificateDto> findAllGiftCertificates();
+    GiftCertificateDto updateGiftCertificate(GiftCertificateDto giftCertificateDto, Integer id);
 
     List<GiftCertificateDto> findGiftCertificates(Map<String, String> params);
 

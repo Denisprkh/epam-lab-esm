@@ -2,7 +2,10 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.validation.ValidationGroup.Update;
+import com.epam.esm.validation.ValidationGroup.Create;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +22,7 @@ public class GiftCertificateController {
     }
 
     @PostMapping
-    public GiftCertificateDto createGiftCertificate(@RequestBody GiftCertificateDto giftCertificateDto) {
+    public GiftCertificateDto createGiftCertificate(@Validated(Create.class) @RequestBody GiftCertificateDto giftCertificateDto) {
         return giftCertificateService.addGiftCertificate(giftCertificateDto);
     }
 
@@ -34,14 +37,10 @@ public class GiftCertificateController {
         giftCertificateService.deleteGiftCertificate(id);
     }
 
-    @PutMapping
-    public GiftCertificateDto updateGiftCertificate(@RequestBody GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.updateGiftCertificate(giftCertificateDto);
-    }
-
-    @GetMapping(value = "/all")
-    public List<GiftCertificateDto> findAllGiftCertificates() {
-        return giftCertificateService.findAllGiftCertificates();
+    @PutMapping(value = "/{id}")
+    public GiftCertificateDto updateGiftCertificate(@Validated(Update.class) @RequestBody GiftCertificateDto
+                                                            giftCertificateDto, @PathVariable Integer id) {
+        return giftCertificateService.updateGiftCertificate(giftCertificateDto, id);
     }
 
     @GetMapping

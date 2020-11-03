@@ -5,8 +5,9 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.dao.giftcertificate.GiftCertificateMapper;
 import com.epam.esm.dao.giftcertificate.GiftCertificateDao;
 import com.epam.esm.dao.giftcertificate.GiftCertificateSqlQuery;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.epam.esm.exception.ResourceNotFoundException;
+import com.epam.esm.util.ResourceBundleErrorMessage;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -17,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class GiftCertificateDaoImpl implements GiftCertificateDao {
@@ -25,7 +27,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     private final JdbcTemplate jdbcTemplate;
     private final GiftCertificateMapper giftCertificateMapper;
     private static final int SUCCESSFULLY_UPDATED_ROW = 1;
-    private static final Logger LOG = LogManager.getLogger();
 
     public GiftCertificateDaoImpl(DataSource dataSource, GiftCertificateMapper giftCertificateMapper) {
         this.dataSource = dataSource;
@@ -53,8 +54,12 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public GiftCertificate findById(Integer id) {
-        return jdbcTemplate.queryForObject(GiftCertificateSqlQuery.FIND_GIFT_CERTIFICATE_BY_ID,
-                giftCertificateMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(GiftCertificateSqlQuery.FIND_GIFT_CERTIFICATE_BY_ID,
+                    giftCertificateMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(ResourceBundleErrorMessage.RESOURCE_NOT_FOUND);
+        }
     }
 
     @Override
@@ -71,7 +76,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     @Override
     public GiftCertificate update(GiftCertificate giftCertificate) {
         jdbcTemplate.update(connection -> {
-                    PreparedStatement statement = connection.prepareStatement(GiftCertificateSqlQuery.UPDATE_TAG_BY_ID);
+                    PreparedStatement statement = connection.prepareStatement(GiftCertificateSqlQuery.UPDATE_CERTIFICATE_BY_ID);
                     statement.setString(1, giftCertificate.getName());
                     statement.setBigDecimal(2, giftCertificate.getPrice());
                     statement.setTimestamp(3, giftCertificate.getLastUpdateDate());
@@ -86,7 +91,11 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public List<GiftCertificate> findAll() {
-        return jdbcTemplate.query(GiftCertificateSqlQuery.FIND_ALL_GIFT_CERTIFICATES, giftCertificateMapper);
+        try {
+            return jdbcTemplate.query(GiftCertificateSqlQuery.FIND_ALL_GIFT_CERTIFICATES, giftCertificateMapper);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(ResourceBundleErrorMessage.RESOURCE_NOT_FOUND);
+        }
     }
 
     @Override
@@ -101,6 +110,20 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public List<GiftCertificate> findGiftCertificatesByParameters(String condition) {
-        return jdbcTemplate.query(GiftCertificateSqlQuery.SELECT_ALL_FIELDS + condition, giftCertificateMapper);
+        try {
+            return jdbcTemplate.query(GiftCertificateSqlQuery.SELECT_ALL_FIELDS + condition, giftCertificateMapper);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(ResourceBundleErrorMessage.RESOURCE_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public Optional<GiftCertificate> findByName(String name) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(GiftCertificateSqlQuery.FIND_GIFT_CERTIFICATE_BY_NAME,
+                    giftCertificateMapper, name));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

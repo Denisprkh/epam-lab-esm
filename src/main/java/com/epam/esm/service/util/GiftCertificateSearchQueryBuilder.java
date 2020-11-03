@@ -1,8 +1,5 @@
 package com.epam.esm.service.util;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,16 +25,16 @@ public class GiftCertificateSearchQueryBuilder {
     private static final String ORDER_GIFT_CERTIFICATES_BY = "ORDER BY ";
     private static final String AND_CLAUSE = " AND ";
     private static final String WHERE_CLAUSE = " WHERE";
-    private static final Logger LOG = LogManager.getLogger();
+    private static final String EMPTY_STRING = "";
 
-    private Map<String, String> searchQueries;
-    private Map<String, String> orderQueries;
-    private StringBuilder queryBuilder;
+    private final Map<String, String> searchQueries;
+    private final Map<String, String> orderQueries;
+    private final StringBuilder queryBuilder;
 
     public GiftCertificateSearchQueryBuilder() {
         this.searchQueries = new HashMap<>();
         this.orderQueries = new HashMap<>();
-        this.queryBuilder = new StringBuilder();
+        this.queryBuilder = new StringBuilder(EMPTY_STRING);
         init();
     }
 
@@ -54,8 +51,10 @@ public class GiftCertificateSearchQueryBuilder {
     }
 
     public String buildQuery(Map<String, String> params) {
-        appendQuery(params);
-        appendSortConditionIfExists(params);
+        if (!params.isEmpty()) {
+            appendQuery(params);
+            appendSortConditionIfExists(params);
+        }
         return queryBuilder.toString();
     }
 
@@ -85,7 +84,6 @@ public class GiftCertificateSearchQueryBuilder {
     }
 
     private boolean whereClauseIsRequired() {
-        LOG.debug(queryBuilder.toString().contains(WHERE_CLAUSE));
         return !queryBuilder.toString().contains(WHERE_CLAUSE);
     }
 

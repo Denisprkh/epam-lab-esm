@@ -1,17 +1,43 @@
 package com.epam.esm.dto;
 
+import com.epam.esm.util.ResourceBundleErrorMessage;
+import com.epam.esm.validation.ValidationGroup.Update;
+import com.epam.esm.validation.ValidationGroup.Create;
+
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class GiftCertificateDto {
 
     private int id;
+
+    @NotBlank(message = ResourceBundleErrorMessage.CERTIFICATE_NAME_FORMAT_ERROR_MESSAGE, groups = Create.class)
+    @Pattern(regexp = ".{10,255}", message = ResourceBundleErrorMessage.CERTIFICATE_NAME_FORMAT_ERROR_MESSAGE)
     private String name;
+
+    @NotBlank(message = ResourceBundleErrorMessage.CERTIFICATE_DESCRIPTION_FORMAT_ERROR_MESSAGE, groups = Create.class)
+    @Size(min = 10, message = ResourceBundleErrorMessage.CERTIFICATE_DESCRIPTION_FORMAT_ERROR_MESSAGE, groups =
+            {Create.class, Update.class})
     private String description;
+
+    @NotNull(message = ResourceBundleErrorMessage.CERTIFICATE_PRICE_IS_REQUIRED_ERROR_MESSAGE, groups = Create.class)
+    @Digits(integer = 5, fraction = 2, message = ResourceBundleErrorMessage.CERTIFICATE_PRICE_FORMAT_ERROR_MESSAGE)
     private BigDecimal price;
+
+    @NotNull(message = ResourceBundleErrorMessage.CERTIFICATE_TAG_IS_REQUIRED_ERROR_MESSAGE, groups = Create.class)
+    @Size(min = 1, message = ResourceBundleErrorMessage.CERTIFICATE_TAG_IS_REQUIRED_ERROR_MESSAGE)
     private List<String> tags;
+
+    @Null(message = ResourceBundleErrorMessage.CERTIFICATE_CREATE_DATE_MUST_BE_MISSING_ERROR_MESSAGE)
     private String createDate;
+
+    @Null(message = ResourceBundleErrorMessage.CERTIFICATE_LAST_UPDATE__DATE_MUST_BE_MISSING_ERROR_MESSAGE)
     private String lastUpdateDate;
+
+    @NotNull(message = ResourceBundleErrorMessage.CERTIFICATE_DURATION_IS_REQUIRED_ERROR_MESSAGE, groups = Create.class)
+    @Min(value = 1, message = ResourceBundleErrorMessage.CERTIFICATE_DURATION_VALUE_ERROR_MESSAGE, groups = Create.class)
+
     private int durationInDays;
 
     public int getId() {

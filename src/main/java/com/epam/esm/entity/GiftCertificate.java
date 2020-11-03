@@ -71,10 +71,10 @@ public class GiftCertificate {
 
     public void merge(GiftCertificate giftCertificate) {
         setName(nonNull(giftCertificate.getName()) ? giftCertificate.getName() : this.name);
-        setDescription(nonNull(giftCertificate.getDescription()) ? giftCertificate.getDescription() :
-                this.description);
+        setDescription(nonNull(giftCertificate.getDescription()) ? giftCertificate.getDescription() : this.description);
         setPrice(nonNull(giftCertificate.getPrice()) ? giftCertificate.getPrice() : this.price);
-        setDurationInDays(giftCertificate.getDurationInDays() != 0 ? giftCertificate.getDurationInDays() : this.durationInDays);
+        setDurationInDays(giftCertificate.getDurationInDays() != 0 ? giftCertificate.getDurationInDays() :
+                this.durationInDays);
         setTags(nonNull(giftCertificate.getTags()) ?
                 giftCertificate.getTags() : this.tags);
     }

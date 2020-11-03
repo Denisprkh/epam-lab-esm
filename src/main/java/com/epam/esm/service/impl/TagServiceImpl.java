@@ -2,7 +2,9 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.entity.Tag;
 import com.epam.esm.dao.tag.TagDao;
+import com.epam.esm.exception.ResourceAlreadyExistsException;
 import com.epam.esm.service.TagService;
+import com.epam.esm.util.ResourceBundleErrorMessage;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,6 +21,11 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag createTag(Tag tag) {
+        Optional<Tag> tagFoundByName = findTagByName(tag.getName());
+        if (tagFoundByName.isPresent()) {
+            throw new ResourceAlreadyExistsException(ResourceBundleErrorMessage.TAG_IS_ALREADY_EXISTS_ERROR_MESSAGE,
+                    tagFoundByName.get().getId());
+        }
         return tagDao.create(tag);
     }
 

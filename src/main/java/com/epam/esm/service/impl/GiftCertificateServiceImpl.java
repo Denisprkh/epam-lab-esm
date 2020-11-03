@@ -1,15 +1,15 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.dto.mapper.GiftCertificateDtoMapper;
+import com.epam.esm.dto.mapper.impl.GiftCertificateDtoMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.dao.giftcertificate.GiftCertificateDao;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.ResourceAlreadyExistsException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.util.GiftCertificateSearchQueryBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.epam.esm.util.ResourceBundleErrorMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -27,7 +28,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private final GiftCertificateDao giftCertificateDao;
     private final TagService tagService;
-    private static final Logger LOG = LogManager.getLogger();
     private final GiftCertificateDtoMapper mapper;
 
     public GiftCertificateServiceImpl(GiftCertificateDao giftCertificateDao, TagService tagService,
@@ -40,6 +40,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto addGiftCertificate(GiftCertificateDto giftCertificateDto) {
+        Optional<GiftCertificate> foundByNameCertificate = giftCertificateDao.findByName(giftCertificateDto.getName());
+        if (foundByNameCertificate.isPresent()) {
+            throw new ResourceAlreadyExistsException(ResourceBundleErrorMessage.CERTIFICATE_ALREADY_EXISTS_ERROR_MESSAGE,
+                    foundByNameCertificate.get().getId());
+        }
         GiftCertificate createdGiftCertificate = createGiftCertificate(giftCertificateDto);
         if (nonNull(giftCertificateDto.getTags())) {
             List<Tag> identifiedTags = identifyGiftCertificatesTags(giftCertificateDto);
@@ -67,26 +72,19 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public GiftCertificateDto updateGiftCertificate(GiftCertificateDto giftCertificatedto) {
-        GiftCertificate existingCertificate = giftCertificateDao.findById(giftCertificatedto.getId());
+    public GiftCertificateDto updateGiftCertificate(GiftCertificateDto giftCertificatedto, Integer id) {
+        GiftCertificate existingCertificate = giftCertificateDao.findById(id);
         GiftCertificate updatedGiftCertificate = mapper.toModel(giftCertificatedto);
         existingCertificate.merge(updatedGiftCertificate);
         existingCertificate.setLastUpdateDate(Timestamp.valueOf(LocalDateTime.now()));
         if (nonNull(giftCertificatedto.getTags())) {
             List<Tag> identifiedTags = identifyGiftCertificatesTags(giftCertificatedto);
-            List<Tag> existingTags = tagService.findGiftCertificatesTags(giftCertificatedto.getId());
+            List<Tag> existingTags = tagService.findGiftCertificatesTags(id);
             identifiedTags.removeAll(existingTags);
             addGiftCertificatesTags(identifiedTags, existingCertificate);
         }
-        existingCertificate.setTags(tagService.findGiftCertificatesTags(existingCertificate.getId()));
+        existingCertificate.setTags(tagService.findGiftCertificatesTags(id));
         return mapper.toDto(giftCertificateDao.update(existingCertificate));
-    }
-
-    @Override
-    public List<GiftCertificateDto> findAllGiftCertificates() {
-        List<GiftCertificate> giftCertificates = giftCertificateDao.findAll();
-        setGiftCertificatesTags(giftCertificates);
-        return mapCertificatesToDto(giftCertificates);
     }
 
     @Override
