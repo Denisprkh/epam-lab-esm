@@ -20,6 +20,6 @@ public final class ResourceBundleErrorMessage {
     public static final String CERTIFICATE_LAST_UPDATE__DATE_MUST_BE_MISSING_ERROR_MESSAGE =
             "certificate_last_update_date_must_be_missing.error_message";
 
-    private ResourceBundleErrorMessage(){
+    private ResourceBundleErrorMessage() {
     }
 }

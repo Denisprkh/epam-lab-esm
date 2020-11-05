@@ -72,7 +72,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto updateGiftCertificate(GiftCertificateDto giftCertificatedto, Integer id) {
+        Optional<GiftCertificate> foundByNameCertificate = giftCertificateDao.findByName(giftCertificatedto.getName());
         GiftCertificate existingCertificate = giftCertificateDao.findById(id);
+        if(foundByNameCertificate.isPresent() && foundByNameCertificate.get().getId() != existingCertificate.getId()){
+            throw new ResourceAlreadyExistsException(ResourceBundleErrorMessage.CERTIFICATE_ALREADY_EXISTS_ERROR_MESSAGE,
+                    foundByNameCertificate.get().getId());
+        }
         GiftCertificate updatedGiftCertificate = mapper.toModel(giftCertificatedto);
         existingCertificate.merge(updatedGiftCertificate);
         existingCertificate.setLastUpdateDate(Timestamp.valueOf(LocalDateTime.now()));

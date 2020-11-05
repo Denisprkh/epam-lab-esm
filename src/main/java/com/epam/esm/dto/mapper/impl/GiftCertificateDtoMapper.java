@@ -9,10 +9,18 @@ import org.springframework.stereotype.Component;
 
 import static java.util.Objects.nonNull;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Component
 public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificateDto, GiftCertificate> {
+
+    private static final String TIMEZONE = "UTC";
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm'Z'";
+
 
     @Override
     public GiftCertificateDto toDto(GiftCertificate giftCertificate) {
@@ -21,9 +29,11 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificateDto, G
         giftCertificateDto.setName(giftCertificate.getName());
         giftCertificateDto.setDescription(giftCertificate.getDescription());
         giftCertificateDto.setPrice(giftCertificate.getPrice());
-        giftCertificateDto.setTags(giftCertificate.getTags().stream().map(Tag::getName).collect(Collectors.toList()));
-        giftCertificateDto.setCreateDate(giftCertificate.getCreateDate().toString());
-        giftCertificateDto.setLastUpdateDate(giftCertificate.getLastUpdateDate().toString());
+        if (nonNull(giftCertificate.getTags())) {
+            giftCertificateDto.setTags(giftCertificate.getTags().stream().map(Tag::getName).collect(Collectors.toList()));
+        }
+        giftCertificateDto.setCreateDate(convertTimesTampToISOFormat(giftCertificate.getCreateDate()));
+        giftCertificateDto.setLastUpdateDate(convertTimesTampToISOFormat(giftCertificate.getLastUpdateDate()));
         giftCertificateDto.setDurationInDays(giftCertificate.getDurationInDays());
         return giftCertificateDto;
     }
@@ -41,5 +51,12 @@ public class GiftCertificateDtoMapper implements DtoMapper<GiftCertificateDto, G
         }
         giftCertificate.setDurationInDays(giftCertificateDto.getDurationInDays());
         return giftCertificate;
+    }
+
+    private String convertTimesTampToISOFormat(Timestamp timestamp) {
+        TimeZone timeZone = TimeZone.getTimeZone(TIMEZONE);
+        DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        dateFormat.setTimeZone(timeZone);
+        return dateFormat.format(timestamp);
     }
 }

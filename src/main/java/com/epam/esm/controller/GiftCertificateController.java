@@ -4,7 +4,6 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.validation.ValidationGroup.Update;
 import com.epam.esm.validation.ValidationGroup.Create;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +31,6 @@ public class GiftCertificateController {
     }
 
     @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public void deleteGiftCertificate(@PathVariable Integer id) {
         giftCertificateService.deleteGiftCertificate(id);
     }

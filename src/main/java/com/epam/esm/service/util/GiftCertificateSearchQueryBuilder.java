@@ -62,13 +62,15 @@ public class GiftCertificateSearchQueryBuilder {
         appendSelectorByTagName(params);
         params.keySet().forEach(key -> {
             String queryCondition = searchQueries.get(key);
-            if (!whereClauseIsRequired() && !PARAM_ORDER_BY.equals(key)) {
-                queryBuilder.append(AND_CLAUSE);
-            } else if (!PARAM_ORDER_BY.equals(key)) {
-                queryBuilder.append(WHERE_CLAUSE);
+            if (!PARAM_ORDER_BY.equals(key)) {
+                if (!whereClauseIsRequired()) {
+                    queryBuilder.append(AND_CLAUSE);
+                } else {
+                    queryBuilder.append(WHERE_CLAUSE);
+                }
+                queryCondition = queryCondition.replaceAll("\\?", "\"" + params.get(key) + "\"");
+                queryBuilder.append(queryCondition);
             }
-            queryCondition = queryCondition.replaceAll("\\?", "\"" + params.get(key) + "\"");
-            queryBuilder.append(queryCondition);
         });
     }
 
@@ -89,6 +91,7 @@ public class GiftCertificateSearchQueryBuilder {
 
     private void appendSortConditionIfExists(Map<String, String> params) {
         if (params.containsKey(PARAM_ORDER_BY)) {
+            queryBuilder.append(ORDER_GIFT_CERTIFICATES_BY);
             queryBuilder.append(orderQueries.get(params.get(PARAM_ORDER_BY)));
         }
     }
