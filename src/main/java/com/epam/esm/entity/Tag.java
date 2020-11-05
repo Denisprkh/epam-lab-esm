@@ -2,14 +2,14 @@ package com.epam.esm.entity;
 
 import com.epam.esm.util.ResourceBundleErrorMessage;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class Tag {
 
     private int id;
 
-    @NotNull(message = ResourceBundleErrorMessage.TAG_NAME_IS_REQUIRED_ERROR_MESSAGE)
+    @NotBlank(message = ResourceBundleErrorMessage.TAG_NAME_IS_REQUIRED_ERROR_MESSAGE)
     @Size(min = 2, max = 30, message = ResourceBundleErrorMessage.TAG_NAME_FORMAT_ERROR_MESSAGE)
     private String name;
 

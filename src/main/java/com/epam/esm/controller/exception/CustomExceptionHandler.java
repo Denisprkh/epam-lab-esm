@@ -45,11 +45,11 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ExceptionResponse> handleRuntimeException(RuntimeException e, Locale locale) {
-        String errorMessage = messageSource.getMessage(ResourceBundleErrorMessage.INTERNAL_SERVER_ERROR, new Object[]{},
-                locale);
-        ExceptionResponse response = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), errorMessage);
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<ExceptionResponse> handleRuntimeException(RuntimeException e, Locale locale) {
+//        String errorMessage = messageSource.getMessage(ResourceBundleErrorMessage.INTERNAL_SERVER_ERROR, new Object[]{},
+//                locale);
+//        ExceptionResponse response = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), errorMessage);
+//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }
