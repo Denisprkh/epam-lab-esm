@@ -49,8 +49,8 @@ public class GiftCertificateServiceTest {
         giftCertificate.setCreateDate(Timestamp.valueOf("2020-11-03 16:27:26.0"));
         GiftCertificateDto returnedDto = new GiftCertificateDto();
         returnedDto.setId(1);
-        returnedDto.setLastUpdateDate("2020-11-03 16:27:26.0");
-        returnedDto.setCreateDate("2020-11-03 16:27:26.0");
+        returnedDto.setLastUpdateDate("2020-11-03T13:27Z");
+        returnedDto.setCreateDate("2020-11-03T13:27Z");
         returnedDto.setTags(Collections.emptyList());
         Mockito.when(giftCertificateDao.findById(1)).thenReturn(giftCertificate);
         GiftCertificateDto resultDto = giftCertificateService.findGiftCertificateById(1);
@@ -91,8 +91,8 @@ public class GiftCertificateServiceTest {
         GiftCertificateDto dtoToAdd = new GiftCertificateDto();
         GiftCertificateDto returnedGiftCertificateDto = new GiftCertificateDto();
         returnedGiftCertificateDto.setId(1);
-        returnedGiftCertificateDto.setLastUpdateDate("2020-11-03 16:27:26.0");
-        returnedGiftCertificateDto.setCreateDate("2020-11-03 16:27:26.0");
+        returnedGiftCertificateDto.setLastUpdateDate("2020-11-03T13:27Z");
+        returnedGiftCertificateDto.setCreateDate("2020-11-03T13:27Z");
         Mockito.when(giftCertificateDao.create(Mockito.any())).thenReturn(giftCertificate);
         GiftCertificateDto resultGiftCertificateDto = giftCertificateService.addGiftCertificate(dtoToAdd);
         Assertions.assertEquals(returnedGiftCertificateDto, resultGiftCertificateDto);
