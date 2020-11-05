@@ -120,9 +120,9 @@ public class GiftCertificateServiceTest {
     @Test
     void addGiftGiftCertificateTest_Should_Throw_Exception() {
         GiftCertificateDto giftCertificateDtoToAdd = new GiftCertificateDto();
-        giftCertificateDtoToAdd.setName("Name");
+        giftCertificateDtoToAdd.setName("Nam");
         GiftCertificate existingGiftCertificate = new GiftCertificate();
-        Mockito.when(giftCertificateDao.findByName("Name")).thenReturn(Optional.of(existingGiftCertificate));
+        Mockito.when(giftCertificateDao.findByName("Nam")).thenReturn(Optional.of(existingGiftCertificate));
         Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> giftCertificateService.
                 addGiftCertificate(giftCertificateDtoToAdd));
     }
