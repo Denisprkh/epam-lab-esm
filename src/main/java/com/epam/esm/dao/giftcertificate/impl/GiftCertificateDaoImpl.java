@@ -13,7 +13,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -23,14 +22,12 @@ import java.util.Optional;
 @Component
 public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
-    private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
     private final GiftCertificateMapper giftCertificateMapper;
     private static final int SUCCESSFULLY_UPDATED_ROW = 1;
 
-    public GiftCertificateDaoImpl(DataSource dataSource, GiftCertificateMapper giftCertificateMapper) {
-        this.dataSource = dataSource;
-        this.jdbcTemplate = new JdbcTemplate(this.dataSource);
+    public GiftCertificateDaoImpl(JdbcTemplate jdbcTemplate, GiftCertificateMapper giftCertificateMapper) {
+        this.jdbcTemplate = jdbcTemplate;
         this.giftCertificateMapper = giftCertificateMapper;
     }
 
@@ -91,11 +88,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public List<GiftCertificate> findAll() {
-        try {
-            return jdbcTemplate.query(GiftCertificateSqlQuery.FIND_ALL_GIFT_CERTIFICATES, giftCertificateMapper);
-        } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException(ResourceBundleErrorMessage.RESOURCE_NOT_FOUND);
-        }
+        return jdbcTemplate.query(GiftCertificateSqlQuery.FIND_ALL_GIFT_CERTIFICATES, giftCertificateMapper);
     }
 
     @Override
@@ -110,11 +103,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public List<GiftCertificate> findGiftCertificatesByParameters(String condition) {
-        try {
-            return jdbcTemplate.query(GiftCertificateSqlQuery.SELECT_ALL_FIELDS + condition, giftCertificateMapper);
-        } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException(ResourceBundleErrorMessage.RESOURCE_NOT_FOUND);
-        }
+        return jdbcTemplate.query(GiftCertificateSqlQuery.SELECT_ALL_FIELDS + condition, giftCertificateMapper);
     }
 
     @Override

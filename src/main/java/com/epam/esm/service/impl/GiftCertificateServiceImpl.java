@@ -6,6 +6,7 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.dao.giftcertificate.GiftCertificateDao;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.ResourceAlreadyExistsException;
+import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.util.GiftCertificateSearchQueryBuilder;
@@ -29,12 +30,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateDao giftCertificateDao;
     private final TagService tagService;
     private final GiftCertificateDtoMapper mapper;
+    private final GiftCertificateSearchQueryBuilder queryBuilder;
 
     public GiftCertificateServiceImpl(GiftCertificateDao giftCertificateDao, TagService tagService,
-                                      GiftCertificateDtoMapper mapper) {
+                                      GiftCertificateDtoMapper mapper, GiftCertificateSearchQueryBuilder builder) {
         this.giftCertificateDao = giftCertificateDao;
         this.tagService = tagService;
         this.mapper = mapper;
+        this.queryBuilder = builder;
     }
 
     @Override
@@ -64,9 +67,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public boolean deleteGiftCertificate(Integer id) {
-        boolean giftCertificatesTagsAreDeleted = giftCertificateDao.deleteGiftCertificatesTags(id);
-        boolean giftCertificateIsDeleted = giftCertificateDao.delete(id);
-        return giftCertificatesTagsAreDeleted && giftCertificateIsDeleted;
+        if (giftCertificateDao.findById(id) != null) {
+            boolean giftCertificatesTagsAreDeleted = giftCertificateDao.deleteGiftCertificatesTags(id);
+            boolean giftCertificateIsDeleted = giftCertificateDao.delete(id);
+            return giftCertificatesTagsAreDeleted && giftCertificateIsDeleted;
+        }
+        throw new ResourceNotFoundException(ResourceBundleErrorMessage.RESOURCE_NOT_FOUND);
     }
 
     @Override
@@ -74,7 +80,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto updateGiftCertificate(GiftCertificateDto giftCertificatedto, Integer id) {
         Optional<GiftCertificate> foundByNameCertificate = giftCertificateDao.findByName(giftCertificatedto.getName());
         GiftCertificate existingCertificate = giftCertificateDao.findById(id);
-        if(foundByNameCertificate.isPresent() && foundByNameCertificate.get().getId() != existingCertificate.getId()){
+        if (foundByNameCertificate.isPresent() && foundByNameCertificate.get().getId() != existingCertificate.getId()) {
             throw new ResourceAlreadyExistsException(ResourceBundleErrorMessage.CERTIFICATE_ALREADY_EXISTS_ERROR_MESSAGE,
                     foundByNameCertificate.get().getId());
         }
@@ -94,7 +100,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDto> findGiftCertificates(Map<String, String> params) {
         List<GiftCertificate> foundGiftCertificates = giftCertificateDao.findGiftCertificatesByParameters
-                (new GiftCertificateSearchQueryBuilder().buildQuery(params));
+                (queryBuilder.buildQuery(params));
         setGiftCertificatesTags(foundGiftCertificates);
         return mapCertificatesToDto(foundGiftCertificates);
     }

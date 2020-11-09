@@ -12,6 +12,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -32,17 +35,21 @@ public class TagServiceTest {
     @Test
     void findTagByIdTest() {
         Tag tag = new Tag(1, "name");
+
         Mockito.when(tagDao.findById(1)).thenReturn(tag);
         Tag resultTag = tagService.findTagById(1);
-        Assertions.assertEquals(tag, resultTag);
+
+        assertEquals(tag, resultTag);
     }
 
     @Test
     void findTagByNameTest() {
         Tag tag = new Tag(1, "name");
+
         Mockito.when(tagDao.findTagByName("name")).thenReturn(Optional.of(tag));
         Tag resultTag = tagService.findTagByName("name").get();
-        Assertions.assertEquals(tag, resultTag);
+
+        assertEquals(tag, resultTag);
     }
 
     @Test
@@ -50,40 +57,47 @@ public class TagServiceTest {
         Tag tag = new Tag("name");
         List<Tag> allTags = Collections.singletonList(tag);
         List<Tag> expectedTags = Collections.singletonList(tag);
+
         Mockito.when(tagDao.findAll()).thenReturn(allTags);
         List<Tag> resultTagList = tagService.findAllTags();
-        Assertions.assertEquals(expectedTags, resultTagList);
+
+        assertEquals(expectedTags, resultTagList);
     }
 
     @Test
     void deleteTagTest() {
         Mockito.when(tagDao.delete(1)).thenReturn(Boolean.TRUE);
+        Mockito.when(tagDao.findById(1)).thenReturn(new Tag());
         Mockito.when(tagDao.deleteGiftCertificateTag(1)).thenReturn(Boolean.TRUE);
+
         Assertions.assertEquals(Boolean.TRUE, tagService.deleteTag(1));
-        Mockito.verify(tagDao, Mockito.times(1)).delete(1);
-        Mockito.verify(tagDao, Mockito.times(1)).deleteGiftCertificateTag(1);
     }
 
     @Test
     void createTagTest() {
         Tag tagForCreating = new Tag("name");
         Tag createdTag = new Tag(1, "name");
+
         Mockito.when(tagDao.create(tagForCreating)).thenReturn(createdTag);
         Tag resultTag = tagService.createTag(tagForCreating);
-        Assertions.assertEquals(createdTag, resultTag);
+
+        assertEquals(createdTag, resultTag);
     }
 
     @Test
-    void createTagTest_Should_Throw_Exception() {
+    void createTagTestShouldThrowException() {
         Tag tagForCreating = new Tag("name");
         Tag existingTag = new Tag(1, "name");
+
         Mockito.when(tagDao.findTagByName("name")).thenReturn(Optional.of(existingTag));
-        Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> tagService.createTag(tagForCreating));
+
+        assertThrows(ResourceAlreadyExistsException.class, () -> tagService.createTag(tagForCreating));
     }
 
     @Test
-    void findTagByIdTest_Should_Throw_Exception() {
+    void findTagByIdTestShouldThrowException() {
         Mockito.when(tagDao.findById(3)).thenThrow(ResourceNotFoundException.class);
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> tagService.findTagById(3));
+
+        assertThrows(ResourceNotFoundException.class, () -> tagService.findTagById(3));
     }
 }

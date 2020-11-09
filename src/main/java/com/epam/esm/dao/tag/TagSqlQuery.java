@@ -1,5 +1,6 @@
 package com.epam.esm.dao.tag;
 
+
 public final class TagSqlQuery {
 
     public static final String ADD_TAG = "INSERT INTO tag (name) VALUES (?)";

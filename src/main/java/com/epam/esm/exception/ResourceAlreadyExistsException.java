@@ -9,21 +9,6 @@ public class ResourceAlreadyExistsException extends RuntimeException {
         this.resourceId = resourceId;
     }
 
-    public ResourceAlreadyExistsException() {
-    }
-
-    public ResourceAlreadyExistsException(String message) {
-        super(message);
-    }
-
-    public ResourceAlreadyExistsException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ResourceAlreadyExistsException(Throwable cause) {
-        super(cause);
-    }
-
     public int getResourceId() {
         return resourceId;
     }
