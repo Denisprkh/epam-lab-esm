@@ -13,7 +13,7 @@ public class GiftCertificateDto {
     private int id;
 
     @NotBlank(message = ResourceBundleErrorMessage.CERTIFICATE_NAME_FORMAT_ERROR_MESSAGE, groups = Create.class)
-    @Pattern(regexp = ".{10,255}", message = ResourceBundleErrorMessage.CERTIFICATE_NAME_FORMAT_ERROR_MESSAGE)
+    @Pattern(regexp = ".{2,255}", message = ResourceBundleErrorMessage.CERTIFICATE_NAME_FORMAT_ERROR_MESSAGE)
     private String name;
 
     @NotBlank(message = ResourceBundleErrorMessage.CERTIFICATE_DESCRIPTION_FORMAT_ERROR_MESSAGE, groups = Create.class)

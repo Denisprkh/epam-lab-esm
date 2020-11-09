@@ -6,17 +6,15 @@ import com.epam.esm.dao.giftcertificate.impl.GiftCertificateDaoImpl;
 import com.epam.esm.dao.tag.TagDao;
 import com.epam.esm.dao.tag.TagMapper;
 import com.epam.esm.dao.tag.impl.TagDaoImpl;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
 
 @Configuration
-@Import({TagDaoImpl.class})
 public class TestConfig {
 
     private static final String SCRIPT_ENCODING = "UTF-8";
@@ -31,23 +29,27 @@ public class TestConfig {
     }
 
     @Bean
-    public TagMapper getTagMapper() {
+    public TagMapper tagMapper() {
         return new TagMapper();
     }
 
     @Bean
-    public TagDao getTagDaoTest(TagMapper tagMapper, @Qualifier("h2DataSource") DataSource dataSource) {
-        return new TagDaoImpl(dataSource, tagMapper);
+    public TagDao tagDao(TagMapper tagMapper) {
+        return new TagDaoImpl(jdbcTemplate(), tagMapper);
     }
 
     @Bean
-    public GiftCertificateMapper getGiftCertificateMapper() {
+    public JdbcTemplate jdbcTemplate() {
+        return new JdbcTemplate(h2DataSource());
+    }
+
+    @Bean
+    public GiftCertificateMapper giftCertificateMapper() {
         return new GiftCertificateMapper();
     }
 
     @Bean
-    public GiftCertificateDao getGiftCertificateDaoTest(GiftCertificateMapper giftCertificateMapper,
-                                                        @Qualifier("h2DataSource") DataSource dataSource) {
-        return new GiftCertificateDaoImpl(dataSource, giftCertificateMapper);
+    public GiftCertificateDao giftCertificateDao(GiftCertificateMapper giftCertificateMapper) {
+        return new GiftCertificateDaoImpl(jdbcTemplate(), giftCertificateMapper);
     }
 }
